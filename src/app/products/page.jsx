@@ -9,17 +9,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 const PAGE_SIZE = 12;
 const Product = () => {
-  const searchParams = useSearchParams();
-  const pageParam = searchParams.get("page");
-
   const [eCom, setECom] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
-  const [currentPage, setCurrentPage] = useState(pageParam);
+  const [currentPage, setCurrentPage] = useState(1);
   const [inputValue, setInputValue] = useState("");
   const router = useRouter();
 
@@ -56,7 +52,7 @@ const Product = () => {
 
   return (
     <div>
-      <div className="sticky top-0">
+      <div className="flex justify-center items-center sticky top-0">
         <div
           className="w-[25px] h-[25px] bg-center border-gray-200 shadow-2xl "
           style={{ backgroundImage: `url('bag.svg')` }}
@@ -64,8 +60,8 @@ const Product = () => {
         <div className="flex sticky top-0 justify-center items-center font-bold text-xl h-16">
           E-Commerce
         </div>
+        <hr className=""></hr>
       </div>
-      <hr className=""></hr>
       <input
         value={inputValue}
         onChange={handleChange}
@@ -103,16 +99,24 @@ const Product = () => {
         })}
       </div>
       <div className="justify-center text-center p-2 flex items-center">
-        <div
-          className="w-[25px] h-[25px] bg-center border-gray-200 "
-          style={{ backgroundImage: `url('back.svg')` }}
-        ></div>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setCurrentPage(currentPage - 1);
+          }}
+          disabled={currentPage === 1}
+        >
+          <div
+            className="w-[25px] h-[25px] bg-center border-gray-200 "
+            style={{ backgroundImage: `url('back.svg')` }}
+          ></div>
+        </Button>
         <div>
           {my_array.map((page) => {
             return (
               <Button
                 key={page}
-                variant="ghost"
+                variant={page === currentPage ? "default" : "secondary"}
                 onClick={() => {
                   router.push(`?page=${page}`);
                   setCurrentPage(page);
@@ -123,10 +127,18 @@ const Product = () => {
             );
           })}
         </div>
-        <div
-          className="w-[25px] h-[25px] bg-center border-gray-200 "
-          style={{ backgroundImage: `url('rigth.svg')` }}
-        ></div>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setCurrentPage(currentPage + 1);
+          }}
+          disabled={currentPage === Math.ceil(totalPage / PAGE_SIZE)}
+        >
+          <div
+            className="w-[25px] h-[25px] bg-center border-gray-200 "
+            style={{ backgroundImage: `url('rigth.svg')` }}
+          ></div>
+        </Button>
       </div>
       <hr className="border-1 border-gray-200 w-full mt-20 "></hr>
       <div className="flex justify-evenly items-center gap-200 pt-5  ">
